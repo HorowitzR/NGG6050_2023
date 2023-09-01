@@ -11,3 +11,53 @@ If the incidence of the disease in the general population is low, however, then 
 Using a frequentist approach to this question would lead to the "base rate fallacy" because in a high base rate population the test's positive accuracy would be statistically significant, but in a low base rate population the test's positive accuracy would be statistically insignificant.
 
 EXERCISE #2
+
+The following matlab code was generated with the help of ChatGPT and then checked for accuracy by me. 
+The prompt entered was: "Using Bayes' theorem, write matlab code to calculate the probability that if someone gets a positive test that person is actually infected. The total population is 1000, the false positive rate is 5%, and the base infection rate of the population ranges from 0 to 1 in steps of 0.1."
+
+% Define parameters
+total_population = 1000;
+false_positive_rate = 0.05;
+base_infection_rates = 0:0.1:1; % Range from 0 to 1 in steps of 0.1
+
+% Initialize an array to store the probabilities
+infection_given_positive_test_probabilities = zeros(size(base_infection_rates));
+
+% Calculate probabilities for each base infection rate
+for i = 1:length(base_infection_rates)
+    base_infection_rate = base_infection_rates(i);
+    
+    % Calculate the probability of being infected given a positive test using Bayes' theorem
+    % P(A|B) = P(B|A) * P(A) / P(B)
+    % P(A|B) is the probability of being infected given a positive test
+    % P(B|A) is the probability of a positive test given being infected
+    % P(A) is the base infection rate
+    % P(B) is the overall probability of a positive test
+    
+    % P(B|A) = 1 - false_positive_rate (complement of false positive rate)
+    % P(A) = base_infection_rate
+    % P(B) = P(A) * P(B|A) + P(~A) * P(B|~A)
+    % P(~A) = 1 - P(A) (complement of base infection rate)
+    
+    % Calculate P(B|~A)
+    p_b_given_not_a = false_positive_rate;
+    
+    % Calculate P(~A)
+    p_not_a = 1 - base_infection_rate;
+    
+    % Calculate P(B)
+    p_b = (base_infection_rate * (1 - false_positive_rate)) + (p_not_a * p_b_given_not_a);
+    
+    % Calculate P(A|B) using Bayes' theorem
+    p_a_given_b = (base_infection_rate * (1 - false_positive_rate)) / p_b;
+    
+    % Store the result in the array
+    infection_given_positive_test_probabilities(i) = p_a_given_b;
+end
+
+% Plot the results
+plot(base_infection_rates, infection_given_positive_test_probabilities, '-o');
+xlabel('Base Infection Rate');
+ylabel('Probability of Infection Given Positive Test');
+title('Probability of Infection Given Positive Test vs. Base Infection Rate');
+grid on;
