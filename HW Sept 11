@@ -1,0 +1,68 @@
+EXERCISE #1 -------------------------------------------------------------
+This matlab code was generated on 9/5/23 using ChatGPT 3.5 with the prompt: 
+"Pretend you are a computational neuroscientist modeling quanta release in the presynaptic terminal of a neuron. There are 10 quanta available for release, and the probability of release for each on is 0.2. Create matlab code to calculate the probability that 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, or 10 quanta will be released following a binomial distribution. "
+
+% Parameters
+num_trials = 10;      % Number of quanta available for release
+probability = 0.2;    % Probability of release for each quantum
+
+% Number of quanta to calculate probabilities for (0 to 10)
+num_quanta = 0:10;
+
+% Calculate the probabilities using the binomial distribution
+probabilities = binopdf(num_quanta, num_trials, probability);
+
+% Display the probabilities
+for i = 1:numel(num_quanta)
+    fprintf('Probability of %d quanta released: %.4f\n', num_quanta(i), probabilities(i));
+end
+
+Probability of 0 quanta released: 0.1074
+Probability of 1 quanta released: 0.2684
+Probability of 2 quanta released: 0.3020
+Probability of 3 quanta released: 0.2013
+Probability of 4 quanta released: 0.0881
+Probability of 5 quanta released: 0.0264
+Probability of 6 quanta released: 0.0055
+Probability of 7 quanta released: 0.0008
+Probability of 8 quanta released: 0.0001
+Probability of 9 quanta released: 0.0000
+Probability of 10 quanta released: 0.0000
+
+EXERCISE #2 -------------------------------------------------------------
+The probability of getting 8 quanta released if the release probability of each quanta is 0.1 is 0.0002. See below code used to calculate this. 
+The probability of getting 8 quanta released if the release probability of each quanta is 0.7 is 0.0618. See below code used to calculate this. 
+The highest likelihood to get 8 quanta released is 0.2095 generated from 0.5 release probability, so given the 8 quanta measurement it's most likely that the probability of release is 0.5.
+
+This matlab code was generated on 9/5/23 using ChatGPT 3.5 with the prompts: 
+"Pretend you are a computational neuroscientist modeling quanta release in the presynaptic terminal of a neuron. There are 14 quanta available for release, and the probability of release for each on is 0.2. Create matlab code to calculate the probability that 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, or 14 quanta will be released following a binomial distribution. "
+"edit the code from the last prompt so that it checks release probabilities ranging from 0 to 1 in increments of 0.1."
+"Output the above results in a table"
+
+% Parameters
+num_quanta = 14;  % Number of quanta available for release
+
+% Create an array of release probabilities from 0 to 1 in increments of 0.1
+release_probabilities = 0:0.1:1;
+
+% Initialize arrays to store data
+release_probs = [];
+num_quanta_range = 0:num_quanta;
+prob_matrix = zeros(length(release_probabilities), num_quanta + 1);
+
+% Loop through release probabilities and calculate probabilities
+for i = 1:length(release_probabilities)
+    probability = release_probabilities(i);
+    % Calculate the probabilities using the binomial distribution
+    probabilities = binopdf(num_quanta_range, num_quanta, probability);
+    prob_matrix(i, :) = probabilities;
+    
+    % Store the release probability in the array
+    release_probs = [release_probs; probability];
+end
+
+% Create a table
+T = table(release_probs, prob_matrix);
+
+% Display the table
+disp(T);
