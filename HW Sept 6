@@ -1,14 +1,14 @@
 EXERCISE #1
-I am unclear if this question is asking about the false positive rate of 0.05 or the confidence of a person reading a positive test that it correctly indicates infection. 
+No, the false positive rate is exactly 0.05, so the null hypothesis (the HIV test could indicate positive or negative regardless of infection status) cannot be rejected since p must be less than 0.05. 
 
-If the question is asking about the false positive rate of 0.05, then:
-No, the false positive rate is exactly 0.05, so the null hypothesis (the positive result of the HIV test is not accurate) cannot be rejected since p must be less than 0.05. 
+The probability of the null hypothesis is equal to the probability of false negatives (0) plus the probability of false positives (0.05) = 0.05. Since the question is asking for the p < 0.05 level, this is not significant because it is equal to 0.05. 
 
-If the question is asking about the confidence of a person reading a positive test that it correctly indicates infection, then:
-Whether the results would be significant or not would depend entirely on the base infection rate of the population. 
+However, it's important to note that for an individual asking about the confidence they can have that a positive test correctly indicates infection, whether the results would be significant or not would depend entirely on the base infection rate of the population. 
 If the incidence of the disease in the general population is high, then there will be lots of true positives and comparatively much fewer false positives since only 0.5% od the total population minus the true positives will be false. So, a person taking the test who got a positive result can be sure their result is probably accurate given the large number of true positives and comparatively much smaller number of false positives.
 If the incidence of the disease in the general population is low, however, then there will be very few true positives and MORE false positives because 0.05% of the whole population minus the number of true positives will be a greater number than in the previous case since less true positives are being subtracted from the total population. Therefore, there will be more false positives than true positives and a person taking the test who gets a positive result will be very unlikely to have an accurate result. 
-Using a frequentist approach to this question would lead to the "base rate fallacy" because in a high base rate population the test's positive accuracy would be statistically significant, but in a low base rate population the test's positive accuracy would be statistically insignificant.
+This leads us to exercise 2, in which using a frequentist approach to this question reveals the "base rate fallacy": in a high base rate population the test's positive accuracy goes up, but in a low base rate population the test's positive accuracy goes down. Hence, quantifying using a significance cutoff is less meaningful. 
+
+Also, the wording of this question is unclear. It sounds like it's asking if the single data point is significant, and a single data point can't be significant. Consider rewording for future classes. 
 
 EXERCISE #2
 The chance of infection given a positive test is:
