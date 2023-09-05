@@ -30,9 +30,9 @@ Probability of 9 quanta released: 0.0000
 Probability of 10 quanta released: 0.0000
 
 EXERCISE #2 -------------------------------------------------------------
-The probability of getting 8 quanta released if the release probability of each quanta is 0.1 is 0.0002. See below code used to calculate this. 
-The probability of getting 8 quanta released if the release probability of each quanta is 0.7 is 0.0618. See below code used to calculate this. 
-The highest likelihood to get 8 quanta released is 0.2095 generated from 0.5 release probability, so given the 8 quanta measurement it's most likely that the probability of release is 0.5.
+The probability of getting 8 quanta released if the release probability of each quanta is 0.1 is 0.0000. See below code used to calculate this. 
+The probability of getting 8 quanta released if the release probability of each quanta is 0.7 is 0.1262. See below code used to calculate this. 
+The highest likelihood to get 8 quanta released is 0.2066 generated from 0.6 release probability, so given the 8 quanta measurement it's most likely that the probability of release is 0.6.
 
 This matlab code was generated on 9/5/23 using ChatGPT 3.5 with the prompts: 
 "Pretend you are a computational neuroscientist modeling quanta release in the presynaptic terminal of a neuron. There are 14 quanta available for release, and the probability of release for each on is 0.2. Create matlab code to calculate the probability that 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, or 14 quanta will be released following a binomial distribution. "
@@ -66,3 +66,12 @@ T = table(release_probs, prob_matrix);
 
 % Display the table
 disp(T);
+
+EXERCISE #3 -------------------------------------------------------------
+Total likelihood
+(prob of getting 8 given 0.1 release prob) 0.000 + (prob of getting 5 given 0.1 release prob) 0.0078 = 0.0078
+
+Total log likelihood = log (0.000+0.0078) = -4.852
+
+EXERCISE #4 -------------------------------------------------------------
+The release probability is most likely 0.4 because 6 was the most observed quantal release and at a 0.4 release probability you are most likely to observe a quantal release of 6. 
