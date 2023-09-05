@@ -11,13 +11,14 @@ This leads us to exercise 2, in which using a frequentist approach to this quest
 Also, the wording of this question is unclear. It sounds like it's asking if the single data point is significant, and a single data point can't be significant. Consider rewording for future classes. 
 
 EXERCISE #2
+IF YOU WOULD LIKE TO SEE A PLOT IT IS THE LAST CHUNK OF CODE BUT I CANT FIGURE OUT HOW TO UPLOAD A PLOT PICTURE TO GITHUB
 The chance of infection given a positive test is:
 Infection Rate: 0.1 0.2                 0.3                 0.4                 0.5                 0.6                 0.7                 0.8                 0.9                 1
 Probability:    0	0.678571428571429	0.826086956521739	0.890625000000000	0.926829268292683	0.950000000000000	0.966101694915254	0.977941176470588	0.987012987012987	0.994186046511628	1
 
 Below code will generate a graph for easier visualization.
 
-The following matlab code was generated with the help of ChatGPT and then checked for accuracy by me. 
+The following matlab code was generated with the help of ChatGPT 3.5 and then checked for accuracy by me. 
 The prompt entered was: "Using Bayes' theorem, write matlab code to calculate the probability that if someone gets a positive test that person is actually infected. The total population is 1000, the false positive rate is 5%, and the base infection rate of the population ranges from 0 to 1 in steps of 0.1."
 
 % Define parameters
