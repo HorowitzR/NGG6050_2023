@@ -1,0 +1,162 @@
+All code was generated using ChatGPT on 9/6/23 and checked by me. 
+Prompts are listed by the code chunk they correspond with. 
+Code includes a graph but I'm not sure how to upload the graph to github.
+
+Bernouli -------------------------------------------------------------
+weighted coin flip. A binomical dist counts as a type of bernouli dist, but not the other way around.
+"Write matlab code to simulate a population of 1000 following a bernoulli distribution with p = 0.6. Graph the results."
+
+% Define the parameters of the Bernoulli distribution
+p = 0.6; % Probability of success (e.g., 0.6 for a 60% chance of success)
+n = 1000; % Number of samples in the population
+
+% Generate a random population following a Bernoulli distribution
+population = rand(1, n) < p;
+
+% Plot the results
+figure;
+bar([0, 1], [sum(population == 0), sum(population == 1)] / n, 'FaceColor', 'b');
+xlabel('Outcome (0 = Failure, 1 = Success)');
+ylabel('Probability');
+title('Population Distribution (Bernoulli)');
+xticks([0, 1]);
+axis([-0.5 1.5 0 1]);
+
+% Display the probability of success
+text(0.5, 0.9, ['Probability of Success (p) = ' num2str(p)], 'HorizontalAlignment', 'center');
+
+% Show the plot
+grid on;
+
+Binomial -------------------------------------------------------------
+flip a 0.5 coin number of times
+"Write matlab code to simulate a population of 1000 following a binomial distribution. Graph the results."
+
+% Define the parameters of the binomial distribution
+n_trials = 20; % Number of trials (e.g., 20 trials)
+p_success = 0.5; % Probability of success in each trial (e.g., 0.5)
+
+% Simulate the population following a binomial distribution
+population = binornd(n_trials, p_success, 1, 1000);
+
+% Plot the results
+figure;
+histogram(population, 'Normalization', 'probability');
+xlabel('Number of Successes');
+ylabel('Probability');
+title('Population Distribution (Binomial)');
+axis([0 n_trials 0 0.15]); % Adjust axis limits as needed
+
+% Display the parameters
+text(5, 0.13, ['Number of Trials (n) = ' num2str(n_trials)], 'HorizontalAlignment', 'left');
+text(5, 0.12, ['Probability of Success (p) = ' num2str(p_success)], 'HorizontalAlignment', 'left');
+
+% Show the plot
+grid on;
+
+Exponential -------------------------------------------------------------
+memoryless
+"Write matlab code to simulate a population of 1000 following an exponential distribution. Graph the results."
+
+% Define the parameters of the exponential distribution
+lambda = 0.2; % Rate parameter (e.g., 0.2)
+
+% Simulate the population following an exponential distribution
+population = exprnd(1/lambda, 1, 1000);
+
+% Plot the results
+figure;
+histogram(population, 'Normalization', 'probability');
+xlabel('Value');
+ylabel('Probability');
+title('Population Distribution (Exponential)');
+axis([0 max(population) 0 0.2]); % Adjust axis limits as needed
+
+% Display the rate parameter
+text(1, 0.18, ['Rate Parameter (\lambda) = ' num2str(lambda)], 'HorizontalAlignment', 'left');
+
+% Show the plot
+grid on;
+
+Gaussian -------------------------------------------------------------
+bell curve/normal dist
+"Write matlab code to simulate a population of 1000 following an gaussian distribution with a mean of 10 and variance of 1.3. Graph the results."
+
+% Define the parameters of the Gaussian distribution
+mu = 10;    % Mean
+sigma = sqrt(1.3); % Standard deviation (sqrt(variance))
+
+% Simulate the population following a Gaussian distribution
+population = normrnd(mu, sigma, 1, 1000);
+
+% Plot the results
+figure;
+histogram(population, 'Normalization', 'probability');
+xlabel('Value');
+ylabel('Probability');
+title('Population Distribution (Gaussian)');
+grid on;
+
+% Display the parameters
+text(12, 0.3, ['Mean (\mu) = ' num2str(mu)], 'HorizontalAlignment', 'left');
+text(12, 0.28, ['Standard Deviation (\sigma) = ' num2str(sigma)], 'HorizontalAlignment', 'left');
+
+Poisson -------------------------------------------------------------
+events occur independently and at a constant fixed interval
+"Write matlab code to simulate a population of 1000 following a poisson distribution with lambda of 2. Graph the results."
+
+ % Define the parameter of the Poisson distribution
+lambda = 2; % Rate parameter
+
+% Simulate the population following a Poisson distribution
+population = poissrnd(lambda, 1, 1000);
+
+% Plot the results
+figure;
+histogram(population, 'Normalization', 'probability');
+xlabel('Value');
+ylabel('Probability');
+title('Population Distribution (Poisson)');
+axis([0 max(population) 0 0.3]); % Adjust axis limits as needed
+
+% Display the rate parameter
+text(3, 0.25, ['Rate Parameter (\lambda) = ' num2str(lambda)], 'HorizontalAlignment', 'left');
+
+% Show the plot
+grid on;
+
+T-dist -------------------------------------------------------------
+if you take a sample of n observations from a normal distribution, then the z-score of the difference between the sample mean and the population mean computed using the estimated SD of the normal dist follows a t dist
+"Write matlab code to simulate a population of 1000 following a T-distribution with a mean of 23. The variance is unknown so use Bessel-corrected sample variance. Graph the results."
+
+% Define the parameters
+sample_size = 10; % Sample size for estimating the variance
+population_size = 1000; % Population size
+
+% Initialize arrays to store the t-distributed values
+population = zeros(1, population_size);
+
+% Simulate the population following a t-distribution
+for i = 1:population_size
+    % Generate a random sample
+    sample = randn(1, sample_size);
+    
+    % Calculate the sample mean and sample variance
+    sample_mean = mean(sample);
+    sample_variance = var(sample, 1); % Use Bessel-corrected sample variance
+    
+    % Calculate the t-distributed value
+    t_value = (sample_mean - 23) / (sqrt(sample_variance / sample_size));
+    
+    % Store the t-distributed value in the population
+    population(i) = t_value;
+end
+
+% Plot the results
+figure;
+histogram(population, 'Normalization', 'probability');
+xlabel('Value');
+ylabel('Probability');
+title('Population Distribution (Student''s t)');
+grid on;
+
