@@ -146,7 +146,10 @@ The release probability is most likely 0.4 because 6 was the most observed quant
 EXERCISE #5 -------------------------------------------------------------
 The Maximum-Likelihood Estimate (p-hat) for the population is 2.1000.
 
-There is a .05 chance that you would get that data given the null hypothesis is true. You can conclude that temperature most likely doesn't have no effect. 
+You can't calculate a p-value without two populations to compare, and we only know that the probability of release before the temp change is 0.3 and not what it is after. 
+You could simulate a second population with an arbitrarily chosen probability of release, but the p value would depend on what you choose. 
+In short, the point is that a frequentist approach will just be able to reject or not reject the null, rather than telling you the probability that temperature has an effect. 
+That is, if there is a .05 chance that you would get that data given the null hypothesis is true, then you can conclude that temperature most likely doesn't have no effect. 
 
 This code was generated using ChatGPT 3.5 on 9/5/23 using the prompt:
 "Pretend you are a computational neuroscientist modeling quanta release in the presynaptic terminal of a neuron. There are 14 quanta available for release, and the release probability of each one is 0.3. For a single quantal event, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, or 14 of these quanta could be released. You measure 7 quantal events for these same 14 quanta available for release. Write matlab code to compute p-hat, the maximum-likelihood estimate in the population given our sample. "
