@@ -146,7 +146,21 @@ The release probability is most likely 0.4 because 6 was the most observed quant
 EXERCISE #5 -------------------------------------------------------------
 The Maximum-Likelihood Estimate (p-hat) for the population is 2.1000.
 
-There is a .05 chance that you would get that data given the null hypothesis is true. You can conclude that there is a 0.05 chance that temperature has no effect. 
+There is a .05 chance that you would get that data given the null hypothesis is true. You can conclude that temperature most likely doesn't have no effect. 
 
 This code was generated using ChatGPT 3.5 on 9/5/23 using the prompt:
 "Pretend you are a computational neuroscientist modeling quanta release in the presynaptic terminal of a neuron. There are 14 quanta available for release, and the release probability of each one is 0.3. For a single quantal event, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, or 14 of these quanta could be released. You measure 7 quantal events for these same 14 quanta available for release. Write matlab code to compute p-hat, the maximum-likelihood estimate in the population given our sample. "
+
+% Parameters
+num_quanta = 14;            % Number of quanta available for release
+probability_per_quantum = 0.3; % Release probability for each quantum
+num_events = 7;             % Number of observed quantal events
+
+% Calculate p-hat (MLE) for a single quantal event
+p_single_event = probability_per_quantum;
+
+% Calculate p-hat (MLE) for the population of 7 quantal events
+p_hat_population = p_single_event * num_events;
+
+% Display the result
+fprintf('Maximum-Likelihood Estimate (p-hat) for the population: %.4f\n', p_hat_population);
