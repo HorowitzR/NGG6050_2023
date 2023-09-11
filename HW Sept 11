@@ -141,7 +141,7 @@ title('Log Likelihood Functions');
 colorbar;
 
 EXERCISE #4 -------------------------------------------------------------
-The release probability is most likely 0.4 because 6 was the most observed quantal release and at a 0.4 release probability you are most likely to observe a quantal release of 6. 
+The release probability is most likely 0.4 because 6 was the most observed quantal release and at a 0.4 release probability you are most likely to observe a quantal release of 6. I estimated this from the table in Part 2, but could probably get a more precise answer given smaller windows or a fitting algorithm.
 
 EXERCISE #5 -------------------------------------------------------------
 The Maximum-Likelihood Estimate (p-hat) for the population is 2.1000.
