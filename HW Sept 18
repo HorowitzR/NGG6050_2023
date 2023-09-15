@@ -1,0 +1,85 @@
+This code was generated with chatGPT on 9.15.23 from this conversation:
+https://chat.openai.com/share/0b49c254-2547-4e8c-921a-7ed22b0286e8
+
+% Set random seed for reproducibility
+rng(123)
+
+% Define parameters
+duration = 20; % seconds
+sampling_rate = 10; % samples per second (0.1 Hz)
+num_samples = duration * sampling_rate;
+zscore_min = -2;
+zscore_max = 2;
+spike_rate_max = 5;
+
+% Simulate pupil diameter data (z-score)
+pupil_diameter = (zscore_max - zscore_min) * rand(1, num_samples) + zscore_min;
+
+% Simulate locus coeruleus spike rate data (Poisson distribution)
+lambda = spike_rate_max * rand(1, num_samples);
+locus_coeruleus_spikes = poissrnd(lambda);
+
+% Plot simulated data
+time = (0:0.1:duration-0.1);
+figure;
+subplot(2, 1, 1);
+plot(time, pupil_diameter);
+title('Simulated Pupil Diameter');
+xlabel('Time (s)');
+ylabel('Z-Score');
+subplot(2, 1, 2);
+plot(time, locus_coeruleus_spikes);
+title('Simulated Locus Coeruleus Spike Rate');
+xlabel('Time (s)');
+ylabel('Spike Rate');
+
+% Compute the correlation coefficient
+correlation_coefficient = corr(pupil_diameter', locus_coeruleus_spikes');
+
+% Generate null distributions
+num_null_samples = 10000;
+
+% Null distribution for pupil diameter (Gaussian)
+null_pupil_diameter = (zscore_max - zscore_min) * randn(num_null_samples, num_samples) + zscore_min;
+
+% Null distribution for locus coeruleus spikes (Poisson)
+null_correlation_coefficients = zeros(1, num_null_samples);
+
+for i = 1:num_null_samples
+    null_lambda = spike_rate_max * rand(1, num_samples);
+    null_locus_coeruleus_spikes = poissrnd(null_lambda);
+    null_correlation_coefficients(i) = corr(null_pupil_diameter(i, :)', null_locus_coeruleus_spikes');
+end
+
+% Calculate power analysis
+effect_sizes = linspace(0.1, 1, 10);
+required_samples = zeros(1, length(effect_sizes));
+alpha = 0.05;
+power = 0.8;
+
+for i = 1:length(effect_sizes)
+    effect_size = effect_sizes(i);
+    null_distribution_effect_size = effect_size * std(null_pupil_diameter(1, :));
+    threshold = prctile(null_correlation_coefficients, (1 - alpha) * 100);
+    
+    % Custom function to calculate the number of samples needed for power
+    num_samples_needed = calculate_samples_needed(null_distribution_effect_size, alpha, power, num_null_samples);
+    
+    required_samples(i) = num_samples_needed;
+end
+
+% Plot power analysis
+figure;
+plot(effect_sizes, required_samples, 'o-');
+title('Power Analysis');
+xlabel('Effect Size');
+ylabel('Number of Samples Needed for 80% Power');
+grid on;
+
+% Custom function to calculate the number of samples needed for power
+function num_samples_needed = calculate_samples_needed(effect_size, alpha, power, num_null_samples)
+    z_alpha = norminv(1 - alpha);
+    z_beta = norminv(power);
+    
+    num_samples_needed = ((z_alpha + z_beta)^2 * (effect_size^2)) / (effect_size^2 + z_alpha^2) / num_null_samples;
+end
