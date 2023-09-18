@@ -7,3 +7,4 @@ You would use a one sample, skewed distribution sign test because you are testin
 Scenario 3:
 You would use a one sample, skewed distribution sign test because you are testing paired measurements (same subject before/after demo) and the demo could have an effect in either direction (improve/worsen opinion of product) or have no effect. 
 A positive result means that the demo resulted in a bigger value, and a bigger score means the people liked the product more, so the developers would hope to have a positive result meaning liking has increased. 
+A negative result would mean that the demo caused people to like the product less. 
