@@ -1,0 +1,59 @@
+This matlab code was written by ChatGPT on 9/19/23: 
+https://chat.openai.com/share/4fd0370c-a076-41d1-93df-a4bbba1c1742
+
+% Initialize variables
+numTests = 1000;
+alpha = 0.05; % Significance level
+m = 0.05; % Desired FDR for Benjamini-Hochberg procedure
+
+% Initialize arrays to store p-values and results
+pValuesEqualMeans = zeros(numTests, 1);
+pValuesUnequalMeans = zeros(numTests, 1);
+rejectedBonferroni = zeros(numTests, 1);
+rejectedBH = zeros(numTests, 1);
+
+% Simulate 1000 t-tests with equal means and standard deviations
+for i = 1:numTests
+    % Generate two random samples with equal means and standard deviations
+    sample1 = randn(100, 1);
+    sample2 = randn(100, 1);
+    
+    % Perform a t-test
+    [~, p] = ttest2(sample1, sample2);
+    
+    % Store the p-value
+    pValuesEqualMeans(i) = p;
+end
+
+% Perform Bonferroni correction on p-values for equal means
+rejectedBonferroniEqualMeans = pValuesEqualMeans < alpha / numTests;
+fprintf('Bonferroni Correction Results (Equal Means):\n');
+fprintf('Type 1 Errors: %d out of %d tests rejected.\n', sum(rejectedBonferroniEqualMeans), numTests);
+
+% Perform Benjamini-Hochberg procedure on p-values for equal means
+[~, bhRejectedEqualMeans] = fdr_bh(pValuesEqualMeans, m, 'pdep', true);
+fprintf('Benjamini-Hochberg Procedure Results (Equal Means):\n');
+fprintf('False Positives: %d out of %d tests rejected.\n', sum(bhRejectedEqualMeans), numTests);
+
+% Simulate 1000 t-tests with different means
+for i = 1:numTests
+    % Generate two random samples with different means
+    sample1 = randn(100, 1) + 1;
+    sample2 = randn(100, 1) + 2;
+    
+    % Perform a t-test
+    [~, p] = ttest2(sample1, sample2);
+    
+    % Store the p-value
+    pValuesUnequalMeans(i) = p;
+end
+
+% Perform Bonferroni correction on p-values for unequal means
+rejectedBonferroniUnequalMeans = pValuesUnequalMeans < alpha / numTests;
+fprintf('Bonferroni Correction Results (Unequal Means):\n');
+fprintf('Type 1 Errors: %d out of %d tests rejected.\n', sum(rejectedBonferroniUnequalMeans), numTests);
+
+% Perform Benjamini-Hochberg procedure on p-values for unequal means
+[~, bhRejectedUnequalMeans] = fdr_bh(pValuesUnequalMeans, m, 'pdep', true);
+fprintf('Benjamini-Hochberg Procedure Results (Unequal Means):\n');
+fprintf('False Positives: %d out of %d tests rejected.\n', sum(bhRejectedUnequalMeans), numTests);
