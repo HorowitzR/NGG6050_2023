@@ -1,59 +1,76 @@
+Increasing the difference between means, that is the effect size, does not alter the overall likelihood of a type I error using the bonferroni correction, but it does make it easier to reject the null for individual tests. This is because bonferroni controls for the familywise error rate (FWER).
+
+Increasing the difference between means does alter the likelihood of a type I error after benjamini hochberg correction though. This is because BH controls for the false discovery rate (FDR) rather than the FWER. Raising the effect size actually even makes BH more stringent because the p-values will get smaller as they are more significant and small values are even less likely to be significant after the BH adjustment.
+
+Run the below code to see the graphs of probabilty of type I error against number of t-tests, I'm not sure how to upload graphs into github. 
+
 This matlab code was written by ChatGPT on 9/19/23: 
-https://chat.openai.com/share/4fd0370c-a076-41d1-93df-a4bbba1c1742
+https://chat.openai.com/share/e717b969-ed21-43c8-8a43-e80e2d1b881a
 
-% Initialize variables
-numTests = 1000;
-alpha = 0.05; % Significance level
-m = 0.05; % Desired FDR for Benjamini-Hochberg procedure
+% Parameters
+num_tests = 100;          % Number of t-tests
+sample_size = 30;         % Sample size for each group
+pop_mean1 = 1;            % Mean for population 1
+pop_mean2 = 20;            % Mean for population 2
+pop_std = 1;              % Standard deviation for both populations
+alpha = 0.05;             % Significance level
 
-% Initialize arrays to store p-values and results
-pValuesEqualMeans = zeros(numTests, 1);
-pValuesUnequalMeans = zeros(numTests, 1);
-rejectedBonferroni = zeros(numTests, 1);
-rejectedBH = zeros(numTests, 1);
+% Initialize arrays to store results
+p_values = zeros(num_tests, 1);
+bonferroni_corrected_p = zeros(num_tests, 1);
+bh_corrected_p = zeros(num_tests, 1);
 
-% Simulate 1000 t-tests with equal means and standard deviations
-for i = 1:numTests
-    % Generate two random samples with equal means and standard deviations
-    sample1 = randn(100, 1);
-    sample2 = randn(100, 1);
+% Simulate two populations with unequal means and run t-tests
+for i = 1:num_tests
+    % Generate random samples from two populations
+    sample1 = normrnd(pop_mean1, pop_std, sample_size, 1);
+    sample2 = normrnd(pop_mean2, pop_std, sample_size, 1);
     
-    % Perform a t-test
-    [~, p] = ttest2(sample1, sample2);
-    
-    % Store the p-value
-    pValuesEqualMeans(i) = p;
-end
-
-% Perform Bonferroni correction on p-values for equal means
-rejectedBonferroniEqualMeans = pValuesEqualMeans < alpha / numTests;
-fprintf('Bonferroni Correction Results (Equal Means):\n');
-fprintf('Type 1 Errors: %d out of %d tests rejected.\n', sum(rejectedBonferroniEqualMeans), numTests);
-
-% Perform Benjamini-Hochberg procedure on p-values for equal means
-[~, bhRejectedEqualMeans] = fdr_bh(pValuesEqualMeans, m, 'pdep', true);
-fprintf('Benjamini-Hochberg Procedure Results (Equal Means):\n');
-fprintf('False Positives: %d out of %d tests rejected.\n', sum(bhRejectedEqualMeans), numTests);
-
-% Simulate 1000 t-tests with different means
-for i = 1:numTests
-    % Generate two random samples with different means
-    sample1 = randn(100, 1) + 1;
-    sample2 = randn(100, 1) + 2;
-    
-    % Perform a t-test
-    [~, p] = ttest2(sample1, sample2);
+    % Perform a two-sample t-test
+    [~, p, ~] = ttest2(sample1, sample2, 'Alpha', alpha);
     
     % Store the p-value
-    pValuesUnequalMeans(i) = p;
+    p_values(i) = p;
 end
 
-% Perform Bonferroni correction on p-values for unequal means
-rejectedBonferroniUnequalMeans = pValuesUnequalMeans < alpha / numTests;
-fprintf('Bonferroni Correction Results (Unequal Means):\n');
-fprintf('Type 1 Errors: %d out of %d tests rejected.\n', sum(rejectedBonferroniUnequalMeans), numTests);
+% Plot Type 1 error vs. number of t-tests done (uncorrected)
+figure;
+plot(1:num_tests, cumsum(p_values < alpha) ./ (1:num_tests), '-o');
+xlabel('Number of t-tests');
+ylabel('Probability of Type 1 Error');
+title('Uncorrected Type 1 Error');
+legend('Uncorrected');
 
-% Perform Benjamini-Hochberg procedure on p-values for unequal means
-[~, bhRejectedUnequalMeans] = fdr_bh(pValuesUnequalMeans, m, 'pdep', true);
-fprintf('Benjamini-Hochberg Procedure Results (Unequal Means):\n');
-fprintf('False Positives: %d out of %d tests rejected.\n', sum(bhRejectedUnequalMeans), numTests);
+% Bonferroni correction
+bonferroni_alpha = alpha / num_tests;  % Bonferroni-adjusted alpha
+bonferroni_corrected_p = p_values < bonferroni_alpha;
+
+% Plot Type 1 error vs. number of t-tests done (Bonferroni corrected)
+figure;
+plot(1:num_tests, cumsum(bonferroni_corrected_p) ./ (1:num_tests), '-o');
+xlabel('Number of t-tests');
+ylabel('Probability of Type 1 Error');
+title('Bonferroni Corrected Type 1 Error');
+legend('Bonferroni Corrected');
+
+% Benjamini-Hochberg correction
+[sorted_p_values, sort_idx] = sort(p_values);
+bh_alpha = alpha * (1:num_tests) / num_tests;
+
+% Correct p-values using Benjamini-Hochberg procedure
+for i = 1:num_tests
+    if sorted_p_values(i) <= bh_alpha(i)
+        bh_corrected_p(sort_idx(i)) = 1;
+    else
+        break;  % Stop when the condition is no longer met
+    end
+end
+
+% Plot Type 1 error vs. number of t-tests done (Benjamini-Hochberg corrected)
+figure;
+plot(1:num_tests, cumsum(bh_corrected_p) ./ (1:num_tests), '-o');
+xlabel('Number of t-tests');
+ylabel('Probability of Type 1 Error');
+title('Benjamini-Hochberg Corrected Type 1 Error');
+legend('Benjamini-Hochberg Corrected');
+
