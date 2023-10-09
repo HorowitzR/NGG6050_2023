@@ -1,5 +1,60 @@
-I got an error for data_mgl and don't know enough about matlab to troubleshoot. Is it a function? It's not in the github directory if so. 
-Because of this I wasn't able to load in my data because the later_getData function wouldn't run. However, I read through the tutorial and answered the question at the end. 
+%% CHATGPT Code ===================================================
+ChatGPT was used on 10/9/23 to get the following code:
+https://chat.openai.com/share/7f2ba123-8d02-40cd-9d0b-ecfe9a88bd94
+
+% Define your objective function "laterErrFcn"
+function nll = laterErrFcn(params)
+    % Load your dataset (replace 'data' with your actual dataset)
+    load('data.mat');  % Make sure your data is in the correct format
+
+    % Extract model parameters (adjust as needed)
+    parameter1 = params(1);
+    parameter2 = params(2);
+    % Add more parameters if needed
+
+    % Initialize negative log-likelihood
+    nll = 0;
+
+    % Loop through each data point and compute log-likelihood
+    for i = 1:length(data)
+        RT = data(i);  % Assuming "RT" is the relevant data point
+        % Compute the log-likelihood for this data point using your model
+        log_likelihood = computeLogLikelihood(RT, parameter1, parameter2);
+        nll = nll - log_likelihood;  % Sum the negative log-likelihoods
+    end
+end
+
+% Define your custom log-likelihood calculation function
+function log_likelihood = computeLogLikelihood(RT, parameter1, parameter2)
+    % Implement your log-likelihood calculation here
+    % Example: log_likelihood = -log(probability);
+end
+
+% Define initial parameter values for fmincon (modify as needed)
+initial_params = [initial_value_parameter1, initial_value_parameter2];
+% Add more initial parameters if needed
+
+% Define parameter bounds for fmincon (modify as needed)
+lb = [lower_bound_parameter1, lower_bound_parameter2];
+ub = [upper_bound_parameter1, upper_bound_parameter2];
+% Add more bounds if needed
+
+% Set up fmincon options (modify as needed)
+options = optimoptions('fmincon', 'Display', 'iter');
+
+% Run fmincon to find local minimum (modify as needed)
+optimal_params = fmincon(@laterErrFcn, initial_params, [], [], [], [], lb, ub, [], options);
+
+% Use GlobalSearch to find the global minimum
+problem = createOptimProblem('fmincon', 'x0', initial_params, 'objective', @laterErrFcn, 'lb', lb, 'ub', ub);
+gs = GlobalSearch;
+[optimal_params, nll] = run(gs, problem);
+
+% Display results
+disp('Optimal Parameters:');
+disp(optimal_params);
+disp(['Negative Log-Likelihood: ', num2str(nll)]);
+
 
 %% later_getData Function Code ===========================================================
 function [data_, labels_] = later_getData(subjectTag, dataDirectory, expressCutoff)
