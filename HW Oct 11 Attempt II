@@ -34,12 +34,13 @@ clear data
 % EXERCISE:
 % Define your objective function "laterErrFcn"
 function nll = laterErrFcn(params)
-    % Load your dataset (replace 'data' with your actual dataset)
-    load('data.mat');  % Make sure your data is in the correct format
+    % Load your dataset in previous section
+    data = later_getData([], [], 0.2);
+    RTs = data{1};
 
     % Extract model parameters (adjust as needed)
-    parameter1 = params(1);
-    parameter2 = params(2);
+    parameter1 = deltaS0(1);
+    parameter2 = muR0(2);
     % Add more parameters if needed
 
     % Initialize negative log-likelihood
@@ -71,17 +72,17 @@ end
 %   bounds, but we should pick the initial values more judiciously. HINT: 
 %   Recall that the muR and deltaS should be strongly related to 
 %   empirical summary statistics of `the (reciprocal) RT distribution.
-lowerBounds = [0.001 0.001];
-upperBounds = [1000 1000]; 
+%lowerBounds = [0.001 0.001];
+%upperBounds = [1000 1000]; 
 
 % EXERCISE:
 % Define initial parameter values for fmincon (modify as needed)
-initial_params = [initial_value_parameter1, initial_value_parameter2];
+initial_params = [1, 1];
 % Add more initial parameters if needed
 
 % Define parameter bounds for fmincon (modify as needed)
-lb = [lower_bound_parameter1, lower_bound_parameter2];
-ub = [upper_bound_parameter1, upper_bound_parameter2];
+lb = [0.001, 1000];
+ub = [0.001, 1000];
 % Add more bounds if needed
 
 % Set up fmincon options (modify as needed)
