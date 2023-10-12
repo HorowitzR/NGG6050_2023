@@ -1,0 +1,115 @@
+%% CHATGPT Code ===================================================
+ChatGPT was used on 10/9/23 to get the following code:
+https://chat.openai.com/share/7f2ba123-8d02-40cd-9d0b-ecfe9a88bd94
+
+%%  1. Get the data
+%   
+%   Use this code to get a data set (array of RTs from a single condition) 
+%   to fit, already preprocessed to include correct trials only and remove
+%   outliers (including express saccades). See later_getData for details
+data = later_getData([], [], 0.2);
+RTs = data{1};
+clear data
+
+%%  2. Define the objective function
+%
+% The objective function typically defines the error that you want to 
+% minimize between your data and the model predictions. A common objective 
+% function is the negative of the sum of the log-likelihoods of the data, 
+% given the model parameters. To unpack that for the LATER model:
+%
+%   1. For each data point (RT from a single trial, in this case) and given
+%       set of model parameters, compute the probability of the data, given
+%       the model (i.e., the likelihood)
+%   2. Take the logarithm
+%   3. Sum all these log-likelihoods from all the data points
+%   4. Take the negative, because we want to find the minimum (thus
+%        corresponding to the maximum likelihood)
+%
+%   You can define the function simply using an "anonymous function"
+%   (https://www.mathworks.com/help/matlab/matlab_prog/anonymous-functions.html), 
+%   using this template that assumes that "fits" is a 2x1 vector of
+%   [muR, deltaS]:
+ 
+% EXERCISE:
+% Define your objective function "laterErrFcn"
+function nll = laterErrFcn(params)
+    % Load your dataset (replace 'data' with your actual dataset)
+    load('data.mat');  % Make sure your data is in the correct format
+
+    % Extract model parameters (adjust as needed)
+    parameter1 = params(1);
+    parameter2 = params(2);
+    % Add more parameters if needed
+
+    % Initialize negative log-likelihood
+    nll = 0;
+
+    % Loop through each data point and compute log-likelihood
+    for i = 1:length(data)
+        RT = data(i);  % Assuming "RT" is the relevant data point
+        % Compute the log-likelihood for this data point using your model
+        log_likelihood = computeLogLikelihood(RT, parameter1, parameter2);
+        nll = nll - log_likelihood;  % Sum the negative log-likelihoods
+    end
+end
+
+% Define your custom log-likelihood calculation function
+function log_likelihood = computeLogLikelihood(RT, parameter1, parameter2)
+    % Implement your log-likelihood calculation here
+    % Example: log_likelihood = -log(probability);
+end
+
+%%  3. Define initial conditions
+%   
+%   For the actual fitting, we will use fmincon
+%   (https://www.mathworks.com/help/optim/ug/fmincon.html), which is 
+%   "function minimization with constraints." This function allows for 
+%   constraints that include upper and lower bounds on the parameters.
+%   So here we define those bounds, along with the initial values.
+%   We'll use fairly arbitrary values for the lower and upper
+%   bounds, but we should pick the initial values more judiciously. HINT: 
+%   Recall that the muR and deltaS should be strongly related to 
+%   empirical summary statistics of `the (reciprocal) RT distribution.
+lowerBounds = [0.001 0.001];
+upperBounds = [1000 1000]; 
+
+% EXERCISE:
+% Define initial parameter values for fmincon (modify as needed)
+initial_params = [initial_value_parameter1, initial_value_parameter2];
+% Add more initial parameters if needed
+
+% Define parameter bounds for fmincon (modify as needed)
+lb = [lower_bound_parameter1, lower_bound_parameter2];
+ub = [upper_bound_parameter1, upper_bound_parameter2];
+% Add more bounds if needed
+
+% Set up fmincon options (modify as needed)
+options = optimoptions('fmincon', 'Display', 'iter');
+
+% Run fmincon to find local minimum (modify as needed)
+optimal_params = fmincon(@laterErrFcn, initial_params, [], [], [], [], lb, ub, [], options);
+
+%%  4. Run the fits
+% 
+%   We will be using GlobalSearch . The general advantage of this approach 
+%   is to avoid local minima; for details, see:
+%   https://www.mathworks.com/help/gads/how-globalsearch-and-multistart-work.html
+%  
+% Use GlobalSearch to find the global minimum
+problem = createOptimProblem('fmincon', 'x0', initial_params, 'objective', @laterErrFcn, 'lb', lb, 'ub', ub);
+gs = GlobalSearch;
+[optimal_params, nll] = run(gs, problem);
+
+% Display results
+disp('Optimal Parameters:');
+disp(optimal_params);
+disp(['Negative Log-Likelihood: ', num2str(nll)]);
+
+
+%%  5. Evaluate the fits ==================================================================
+%
+%   EXERCISE: How do you know if you got a reasonable answer?
+You should plot a line of fit and see if it visually aligns well with the data. 
+You also want the R squared to be closer to 1 meaning a better fit. The R squared is the square of the correlation between your predicted values and the real values. 
+You also want the RMSE to be closer to 0 meaning a better fit. The RMSE is standard error of the regression. 
